@@ -3,16 +3,16 @@ import {
     createCharacter,
     getAllCharacters,
     getOneCharacter,
-    updateCharacter,
-    deleteCharacter
+    updateCharacter
+    // deleteCharacter
 } from '../controller/characters.controller.js';
 
-const router = Router();
+const charactersRoutes = Router();
 
-app.post('/api/characters', createCharacter);
-app.get('/api/characters', getAllCharacters);
-app.get('/api/characters/:id', getOneCharacter);
-app.put('/api/characters/:id', updateCharacter);
-app.delete('/api/characters/:id', deleteCharacter);
+charactersRoutes.post('/api/characters', createCharacter);
+charactersRoutes.get('/api/characters', getAllCharacters);
+charactersRoutes.get('/api/characters/:id', getOneCharacter);
+charactersRoutes.put('/api/characters/:id', updateCharacter);
+// charactersRoutes.delete('/api/characters/:id', deleteCharacter);
 
-export default router;
+export default charactersRoutes;
