@@ -1,11 +1,10 @@
 import Character from "../model/character.model.js";
-import charactersRoutes from "../routes/characters.routes.js";
 
 
 //Validaciones
 export const createCharacter = async (req, res) => {
     try {
-        const { name, ki, raze, gender } = req.body;
+        const { name, ki, raze, gender, descripcion } = req.body;
 
         if (!name || !ki || !raze || !gender) {
             res.status(400).json({
@@ -37,10 +36,10 @@ export const createCharacter = async (req, res) => {
             });
         };
 
-        if (description !== undefined && typeof description !== 'string') {
+        if (descripcion !== undefined && typeof descripcion !== 'string') {
             res.status(400).json({
                 status: 400,
-                message: 'Si incluyes descripción, debe ser una cadena de texto.' 
+                message: 'Si incluyes descripción, debe ser una cadena de texto.'
             });
         };
 
@@ -51,21 +50,22 @@ export const createCharacter = async (req, res) => {
             name,
             ki,
             raze,
-            gender
+            gender,
+            descripcion
         });
         res.status(201).json({ character });
     } catch (err) {
-        console.error('Se ha producido un error en la creación del personaje', err);
+        console.error('Se ha producido un error en el servidor en la creación del personaje', err);
     };
 };
 
 export const getAllCharacters = async (req, res) => {
     try {
         const character = await Character.findAll();
-        res.status(200).json({ character });
+        res.status(302).json({ character });
 
     } catch (err) {
-        console.error('Se ha producido un error al traer todos los personajes', err);
+        console.error('Se ha producido un error del servidor al traer todos los personajes', err);
     };
 };
 
@@ -73,14 +73,14 @@ export const getOneCharacter = async (req, res) => {
     try {
         const character = await Character.findByPk(req.params.id);
         if (character) {
-            res.status(200).json({ character });
+            res.status(302).json({ character });
         } else {
             res.status(400).json({
                 message: 'El personaje no existe dentro de la base de datos',
             });
         };
     } catch (err) {
-        console.error('Se produjo un error al traer el personaje seleccionado', err);
+        console.error('Se produjo un error del servidor al traer el personaje seleccionado', err);
     };
 };
 
@@ -89,23 +89,48 @@ export const updateCharacter = async (req, res) => {
         const { id } = req.params;
         const character = await Character.findByPk(id);
         if (character) {
-            await Character.update({
-                name,
-                ki,
-                race,
-                gender,
+            await Character.update(req.body, {
                 where: {
                     id
                 }
-
             });
-            res.status(204).json({ characterUpdated, exclude: [res.body.name] })
+            const characterUpdated = await Character.findByPk(id);
+
+            res.status(201).json({ 
+            message: 'Personaje actualizado',
+            characterUpdated });
         } else {
             res.status(404).json({
                 message: 'El personaje seleccionado no fue encontrado en la base de datos'
             });
         };
     } catch (err) {
-        console.error('Hubo un error al actualizar el personaje seleccionado', err);
+        console.error('Hubo un error del servidor al actualizar el personaje seleccionado', err);
     };
 };
+
+export const deleteCharacter = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const character = await Character.findByPk(id);
+
+        if (character) {
+            await Character.destroy({
+                where: {
+                    id
+                }
+            });
+            res.status(410).json({
+                message: 'Personaje eliminado'
+            });
+
+        } else {
+            res.status(404).json({
+                status: 404,
+                message: 'El personaje que quiere eliminar no existe'
+            });
+        };
+    } catch (err) {
+        console.error('Hubo un error del servidor al querer borrar el personaje seleccionado', err);
+    }
+}
