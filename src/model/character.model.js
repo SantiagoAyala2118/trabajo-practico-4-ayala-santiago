@@ -6,7 +6,7 @@ const Character = sequelize.define('Character', {
     ki: { type: DataTypes.INTEGER(), allowNull: false},
     raze: { type: DataTypes.STRING(150), allowNull: false, defaultValue: 'Human' },
     gender: { type: DataTypes.ENUM('Male','Female'), allowNull: false },
-    description: { type: DataTypes.STRING(1000) }
+    descripcion: { type: DataTypes.STRING(1000) }
 });
 await Character.sync();
 
