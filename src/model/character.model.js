@@ -10,4 +10,4 @@ const Character = sequelize.define('Character', {
 });
 await Character.sync();
 
-export default Character;
+export default Character
